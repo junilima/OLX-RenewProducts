@@ -60,16 +60,23 @@ const validateEmail = (email) =>
 
     hrefs.push(...data.products)
 
-    if (data.hasNextPage) await page.click('.bVmLUh')
-    else break
+    if (data.hasNextPage) {
+      await page.click('.bVmLUh')
+      await page.waitForTimeout(1000)
+    } else break
   }
+
+  console.log(`${hrefs.length} Announces Found`)
+
   for (var i = 0; i < hrefs.length; i++) {
     await page.goto(hrefs[i], {
       waitUntil: 'networkidle0',
     })
+    console.log(`Publishing ${i + 1}: ${hrefs[i]}`)
     await page.waitForSelector('.ads-form-bottom__publish')
     await page.click('.ads-form-bottom__publish')
-    await page.waitForSelector('.QocLU')
+    await page.waitForTimeout(5000)
   }
+
   await browser.close()
 })()
